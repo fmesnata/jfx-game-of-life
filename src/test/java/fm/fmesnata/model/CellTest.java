@@ -43,7 +43,7 @@ public class CellTest {
 
         @ParameterizedTest
         @ValueSource(ints = {0, 1})
-        public void living_cell_surrounded_with_less_than_2_living_cells_die(int livingCells) {
+        void living_cell_surrounded_with_less_than_2_living_cells_die(int livingCells) {
             List<Cell> surroundingCells = createSurroundingCells(livingCells);
 
             Cell newState = cell.nextState(surroundingCells);
@@ -53,7 +53,7 @@ public class CellTest {
 
         @ParameterizedTest
         @ValueSource(ints = {2, 3})
-        public void living_cell_surrounded_with_2_or_3_living_cells_survive(int livingCells) {
+        void living_cell_surrounded_with_2_or_3_living_cells_survive(int livingCells) {
             List<Cell> surroundingCells = createSurroundingCells(livingCells);
 
             Cell newState = cell.nextState(surroundingCells);
@@ -63,7 +63,7 @@ public class CellTest {
 
         @ParameterizedTest
         @ValueSource(ints = {4, 5, 6, 7, 8})
-        public void living_cell_surrounded_with_more_than_4_living_cells_die(int livingCells) {
+        void living_cell_surrounded_with_more_than_4_living_cells_die(int livingCells) {
             List<Cell> surroundingCells = createSurroundingCells(livingCells);
 
             Cell newState = cell.nextState(surroundingCells);
@@ -91,7 +91,7 @@ public class CellTest {
 
         @ParameterizedTest
         @ValueSource(ints = {0, 1, 2, 4, 5, 6, 7, 8})
-        public void dead_cell_surrounded_with_less_than_3_or_more_than_3_living_cells_stay_dead(int livingCells) {
+        void dead_cell_surrounded_with_less_than_3_or_more_than_3_living_cells_stay_dead(int livingCells) {
             List<Cell> surroundingCells = createSurroundingCells(livingCells);
 
             Cell newState = cell.nextState(surroundingCells);
