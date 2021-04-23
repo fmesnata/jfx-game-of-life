@@ -1,7 +1,0 @@
-= Différents changement d'état d'une cellule
-
-
-* [x] Une cellule vivante meurt si entourée de 0 ou 1 cellule vivante
-* [x] Une cellule vivante reste en vie si entourée de 2 ou 3 cellules vivantes
-* [x] Une cellule vivante meurt si entourée de 4 ou plus cellules vivantes
-* [ ] Une cellule morte devient vivante si entourée de 3 cellules vivantes

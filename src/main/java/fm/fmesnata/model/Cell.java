@@ -17,12 +17,22 @@ public class Cell {
     }
 
     public Cell nextState(List<Cell> surroundingCells) {
+        if (surroundingCells.size() > 8) {
+            throw new IllegalArgumentException("Cell cannot be surrounded by more than 8 cells. Here : " + surroundingCells.size());
+        }
         long livingCells = surroundingCells.stream().filter(Cell::isAlive).count();
         Cell cell = new Cell();
-        cell.setAlive(false);
-        if (livingCells > UNDERPOPULATION_THRESHOLD && livingCells < OVERPOPULATION_THRESHOLD) {
+        if (isAliveAndSurroundedBy2Or3LivingCells(livingCells) || isDeadAndSurroundedBy3LivingCells(livingCells)) {
             cell.setAlive(true);
         }
         return cell;
+    }
+
+    private boolean isAliveAndSurroundedBy2Or3LivingCells(long livingCells) {
+        return isAlive() && livingCells > UNDERPOPULATION_THRESHOLD && livingCells < OVERPOPULATION_THRESHOLD;
+    }
+
+    private boolean isDeadAndSurroundedBy3LivingCells(long livingCells) {
+        return !isAlive() && livingCells == 3;
     }
 }

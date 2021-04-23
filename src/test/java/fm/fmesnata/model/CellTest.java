@@ -1,6 +1,8 @@
 package fm.fmesnata.model;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class CellTest {
 
@@ -21,34 +24,80 @@ public class CellTest {
         cell = new Cell();
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
-    public void living_cell_surrounded_with_less_than_2_living_cells_die(int livingCells) {
-        List<Cell> surroundingCells = createSurroundingCells(livingCells);
+    @Test
+    void a_cell_cannot_be_surrounded_by_more_than_8_cells() {
+        List<Cell> surroundingCells = createSurroundingCells(9);
 
-        Cell newState = cell.nextState(surroundingCells);
-
-        assertThat(newState.isAlive()).isFalse();
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> cell.nextState(surroundingCells))
+                .withMessage("Cell cannot be surrounded by more than 8 cells. Here : 9");
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {2, 3})
-    public void living_cell_surrounded_with_2_or_3_living_cells_survive(int livingCells) {
-        List<Cell> surroundingCells = createSurroundingCells(livingCells);
+    @Nested
+    class LivingCellTest {
 
-        Cell newState = cell.nextState(surroundingCells);
+        @BeforeEach
+        void setup() {
+            cell.setAlive(true);
+        }
 
-        assertThat(newState.isAlive()).isTrue();
+        @ParameterizedTest
+        @ValueSource(ints = {0, 1})
+        public void living_cell_surrounded_with_less_than_2_living_cells_die(int livingCells) {
+            List<Cell> surroundingCells = createSurroundingCells(livingCells);
+
+            Cell newState = cell.nextState(surroundingCells);
+
+            assertThat(newState.isAlive()).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {2, 3})
+        public void living_cell_surrounded_with_2_or_3_living_cells_survive(int livingCells) {
+            List<Cell> surroundingCells = createSurroundingCells(livingCells);
+
+            Cell newState = cell.nextState(surroundingCells);
+
+            assertThat(newState.isAlive()).isTrue();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {4, 5, 6, 7, 8})
+        public void living_cell_surrounded_with_more_than_4_living_cells_die(int livingCells) {
+            List<Cell> surroundingCells = createSurroundingCells(livingCells);
+
+            Cell newState = cell.nextState(surroundingCells);
+
+            assertThat(newState.isAlive()).isFalse();
+        }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {4, 5, 6, 7, 8})
-    public void living_cell_surrounded_with_more_than_4_living_cells_die(int livingCells) {
-        List<Cell> surroundingCells = createSurroundingCells(livingCells);
+    @Nested
+    class DeadCellTest {
 
-        Cell newState = cell.nextState(surroundingCells);
+        @BeforeEach
+        void setup() {
+            cell.setAlive(false);
+        }
 
-        assertThat(newState.isAlive()).isFalse();
+        @Test
+        void dead_cell_surrounded_with_3_living_cells_reborn() {
+            List<Cell> surroundingCells = createSurroundingCells(3);
+
+            Cell newState = cell.nextState(surroundingCells).nextState(surroundingCells);
+
+            assertThat(newState.isAlive()).isTrue();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {0, 1, 2, 4, 5, 6, 7, 8})
+        public void dead_cell_surrounded_with_less_than_3_or_more_than_3_living_cells_stay_dead(int livingCells) {
+            List<Cell> surroundingCells = createSurroundingCells(livingCells);
+
+            Cell newState = cell.nextState(surroundingCells);
+
+            assertThat(newState.isAlive()).isFalse();
+        }
     }
 
     private List<Cell> createSurroundingCells(int numberOfLivingCells) {
