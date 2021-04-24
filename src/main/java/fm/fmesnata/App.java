@@ -2,10 +2,8 @@ package fm.fmesnata;
 
 import fm.fmesnata.model.Cell;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -20,8 +18,8 @@ public class App extends Application {
     private static final int CELL_SIZE = 15;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    public static final int COLUMN_COUNT = 40;
-    public static final int ROW_COUNT = 75;
+    public static final int COLUMN_COUNT = 75;
+    public static final int ROW_COUNT = 40;
     public static final int SPACE_BETWEEN_CELLS = 1;
 
     @Override
@@ -39,29 +37,29 @@ public class App extends Application {
     }
 
     private VBox createCellsContainer() {
-        VBox columns = new VBox();
-        columns.setSpacing(1);
-        for (int i = 0; i < COLUMN_COUNT; i++) {
-            HBox rows = createRowCells();
-            columns.getChildren().addAll(rows);
-            columns.setAlignment(Pos.CENTER);
+        VBox rows = new VBox();
+        rows.setSpacing(1);
+        for (int i = 0; i < ROW_COUNT; i++) {
+            HBox cols = createCellsColumns();
+            rows.getChildren().addAll(cols);
+            rows.setAlignment(Pos.CENTER);
         }
-        return columns;
+        return rows;
     }
 
-    private HBox createRowCells() {
-        HBox row = new HBox();
-        row.setSpacing(SPACE_BETWEEN_CELLS);
-        row.setAlignment(Pos.CENTER);
-        for (int i = 0; i < ROW_COUNT; i++) {
+    private HBox createCellsColumns() {
+        HBox col = new HBox();
+        col.setSpacing(SPACE_BETWEEN_CELLS);
+        col.setAlignment(Pos.CENTER);
+        for (int i = 0; i < COLUMN_COUNT; i++) {
             Cell cell = new Cell();
             cell.setWidth(CELL_SIZE);
             cell.setHeight(CELL_SIZE);
             cell.setFill(Color.GREY);
             cell.setOnMouseClicked(changeCellState(cell));
-            row.getChildren().add(cell);
+            col.getChildren().add(cell);
         }
-        return row;
+        return col;
     }
 
     private EventHandler<MouseEvent> changeCellState(Cell cell) {
