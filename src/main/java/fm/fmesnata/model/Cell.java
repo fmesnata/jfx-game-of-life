@@ -1,8 +1,10 @@
 package fm.fmesnata.model;
 
+import javafx.scene.shape.Rectangle;
+
 import java.util.List;
 
-public class Cell {
+public class Cell extends Rectangle {
 
     public static final int UNDERPOPULATION_THRESHOLD = 1;
     public static final int OVERPOPULATION_THRESHOLD = 4;
