@@ -2,8 +2,12 @@ package fm.fmesnata;
 
 import fm.fmesnata.model.Cell;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -54,8 +58,21 @@ public class App extends Application {
             cell.setWidth(CELL_SIZE);
             cell.setHeight(CELL_SIZE);
             cell.setFill(Color.GREY);
+            cell.setOnMouseClicked(changeCellState(cell));
             row.getChildren().add(cell);
         }
         return row;
+    }
+
+    private EventHandler<MouseEvent> changeCellState(Cell cell) {
+        return event -> {
+            if (cell.isAlive()) {
+                cell.setAlive(false);
+                cell.setFill(Color.GREY);
+            } else {
+                cell.setAlive(true);
+                cell.setFill(Color.FORESTGREEN);
+            }
+        };
     }
 }
