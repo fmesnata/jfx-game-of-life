@@ -9,12 +9,26 @@ public class Cell extends Rectangle {
 
     public static final int UNDERPOPULATION_THRESHOLD = 1;
     public static final int OVERPOPULATION_THRESHOLD = 4;
-    private boolean alive;
+    private static final int MAX_SURROUNDING_CELLS = 8;
     public static final Color DEAD_CELL_COLOR = Color.LIGHTGREY;
     public static final Color LIVING_CELL_COLOR = Color.FORESTGREEN;
+    private boolean alive;
 
-    public Cell() {
-        this.setFill(DEAD_CELL_COLOR);
+    private Cell() {
+    }
+
+    public static Cell createDeadCell() {
+        Cell cell = new Cell();
+        cell.setAlive(false);
+        cell.setFill(DEAD_CELL_COLOR);
+        return cell;
+    }
+
+    public static Cell createLivingCell() {
+        Cell cell = new Cell();
+        cell.setAlive(true);
+        cell.setFill(LIVING_CELL_COLOR);
+        return cell;
     }
 
     public void setAlive(boolean alive) {
@@ -26,16 +40,14 @@ public class Cell extends Rectangle {
     }
 
     public Cell nextState(List<Cell> surroundingCells) {
-        if (surroundingCells.size() > 8) {
+        if (surroundingCells.size() > MAX_SURROUNDING_CELLS) {
             throw new IllegalArgumentException("Cell cannot be surrounded by more than 8 cells. Here : " + surroundingCells.size());
         }
         long livingCells = surroundingCells.stream().filter(Cell::isAlive).count();
-        Cell cell = new Cell();
         if (isAliveAndSurroundedBy2Or3LivingCells(livingCells) || isDeadAndSurroundedBy3LivingCells(livingCells)) {
-            cell.setAlive(true);
-            cell.setFill(LIVING_CELL_COLOR);
+            return Cell.createLivingCell();
         }
-        return cell;
+        return Cell.createDeadCell();
     }
 
     public void changeState() {

@@ -22,13 +22,9 @@ public class CellTest {
     public static final Color DEAD_CELL_COLOR = Color.LIGHTGREY;
     public static final Color LIVING_CELL_COLOR = Color.FORESTGREEN;
 
-    @BeforeEach
-    void setup() {
-        cell = new Cell();
-    }
-
     @Test
     void a_cell_cannot_be_surrounded_by_more_than_8_cells() {
+        cell = Cell.createDeadCell();
         List<Cell> surroundingCells = createSurroundingCells(9);
 
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -41,7 +37,7 @@ public class CellTest {
 
         @BeforeEach
         void setup() {
-            cell.setAlive(true);
+            cell = Cell.createLivingCell();
         }
 
         @ParameterizedTest
@@ -79,8 +75,7 @@ public class CellTest {
 
         @Test
         void change_state_of_living_cell_become_dead() {
-            Cell cell = new Cell();
-            cell.setAlive(true);
+            Cell cell = Cell.createLivingCell();
             cell.changeState();
             assertThat(cell.isAlive()).isFalse();
             assertThat(cell.getFill()).isEqualTo(DEAD_CELL_COLOR);
@@ -92,7 +87,7 @@ public class CellTest {
 
         @BeforeEach
         void setup() {
-            cell.setAlive(false);
+            cell = Cell.createDeadCell();
         }
 
         @Test
@@ -118,8 +113,7 @@ public class CellTest {
 
         @Test
         void change_state_of_dead_cell_become_alive() {
-            Cell cell = new Cell();
-            cell.setAlive(false);
+            Cell cell = Cell.createDeadCell();
             cell.changeState();
             assertThat(cell.isAlive()).isTrue();
             assertThat(cell.getFill()).isEqualTo(LIVING_CELL_COLOR);
@@ -137,9 +131,7 @@ public class CellTest {
 
     private List<Cell> createCells(int number, boolean alive) {
         return IntStream.rangeClosed(1, number).mapToObj(i -> {
-            Cell c = new Cell();
-            c.setAlive(alive);
-            return c;
+            return alive ? Cell.createLivingCell() : Cell.createDeadCell();
         }).collect(Collectors.toList());
     }
 }

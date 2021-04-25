@@ -12,7 +12,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,8 +27,6 @@ public class App extends Application {
     private static final int COLUMN_COUNT = 75;
     private static final int ROW_COUNT = 40;
     private static final int SPACE_BETWEEN_CELLS = 1;
-    public static final Color DEAD_CELL_COLOR = Color.LIGHTGREY;
-    public static final Color LIVING_CELL_COLOR = Color.FORESTGREEN;
     private Cell[][] cells;
     private Timeline timeline;
     private BorderPane borderPane;
@@ -52,15 +49,14 @@ public class App extends Application {
     }
 
     private Cell[][] initCells() {
-        Cell[][] cc = new Cell[ROW_COUNT][COLUMN_COUNT];
+        Cell[][] cellsArray = new Cell[ROW_COUNT][COLUMN_COUNT];
         for (int row = 0; row < ROW_COUNT; row++) {
             for (int col = 0; col < COLUMN_COUNT; col++) {
-                Cell cell = new Cell();
-                cell.setAlive(false);
-                cc[row][col] = cell;
+                Cell cell = Cell.createDeadCell();
+                cellsArray[row][col] = cell;
             }
         }
-        return cc;
+        return cellsArray;
     }
 
     private VBox createCellsContainer(Cell[][] cells) {
@@ -81,11 +77,6 @@ public class App extends Application {
         for (Cell cell : cols) {
             cell.setWidth(CELL_SIZE);
             cell.setHeight(CELL_SIZE);
-            if (cell.isAlive()) {
-                cell.setFill(LIVING_CELL_COLOR);
-            } else {
-                cell.setFill(DEAD_CELL_COLOR);
-            }
             cell.setOnMouseClicked(event -> cell.changeState());
             col.getChildren().add(cell);
         }
