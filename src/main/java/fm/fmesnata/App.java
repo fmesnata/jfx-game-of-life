@@ -29,7 +29,7 @@ public class App extends Application {
     private static final int COLUMN_COUNT = 75;
     private static final int ROW_COUNT = 40;
     private static final int SPACE_BETWEEN_CELLS = 1;
-    private static final int DEFAULT_REFRESH_DURATION = 10;
+    private static final int DEFAULT_FPS = 10;
     private Cell[][] cells;
     private Timeline animation;
     private BorderPane borderPane;
@@ -88,27 +88,38 @@ public class App extends Application {
     private ToolBar createToolBar() {
         ToolBar toolBar = new ToolBar();
         Label label = new Label("FPS");
-        TextField animationDurationField = new TextField("10");
+        TextField animationDurationField = new TextField(String.valueOf(DEFAULT_FPS));
         animationDurationField.getText();
-        Button startButton = new Button("Start");
-        startButton.setOnMouseClicked(event -> {
+        Button start = new Button("Start");
+        Button stop = new Button("Stop");
+        Button reset = new Button("Reset");
+        reset.setDisable(true);
+        start.setOnMouseClicked(event -> {
             int fps;
             try {
                 fps = Integer.parseInt(animationDurationField.getText());
             } catch (NumberFormatException e) {
-                fps = DEFAULT_REFRESH_DURATION;
+                fps = DEFAULT_FPS;
             }
             animation = createAnimation(1000 / fps);
+            start.setDisable(true);
+            reset.setDisable(true);
             animation.play();
+            stop.setDisable(false);
         });
-        Button stopButton = new Button("Stop");
-        stopButton.setOnMouseClicked(event -> animation.stop());
-        Button reset = new Button("Reset");
+
+        stop.setDisable(true);
+        stop.setOnMouseClicked(event -> {
+            stop.setDisable(true);
+            animation.stop();
+            start.setDisable(false);
+            reset.setDisable(false);
+        });
         reset.setOnMouseClicked(event -> {
             Cell[][] cleanBoard = initCells();
             borderPane.setCenter(createCellsContainer(cleanBoard));
         });
-        toolBar.getItems().addAll(label, animationDurationField, startButton, stopButton, reset);
+        toolBar.getItems().addAll(label, animationDurationField, start, stop, reset);
         return toolBar;
     }
 

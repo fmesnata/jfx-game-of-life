@@ -53,6 +53,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>fm.fmesnata.App</mainClass>
+                            <launcher>jfx-game-of-life</launcher>
                         </configuration>
                     </execution>
                 </executions>
