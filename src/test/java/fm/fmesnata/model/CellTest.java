@@ -1,5 +1,6 @@
 package fm.fmesnata.model;
 
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,8 @@ public class CellTest {
 
     private Cell cell;
     private static final int MAX_SURROUNDING_CELLS = 8;
+    public static final Color DEAD_CELL_COLOR = Color.LIGHTGREY;
+    public static final Color LIVING_CELL_COLOR = Color.FORESTGREEN;
 
     @BeforeEach
     void setup() {
@@ -49,6 +52,7 @@ public class CellTest {
             Cell newState = cell.nextState(surroundingCells);
 
             assertThat(newState.isAlive()).isFalse();
+            assertThat(newState.getFill()).isEqualTo(DEAD_CELL_COLOR);
         }
 
         @ParameterizedTest
@@ -59,6 +63,7 @@ public class CellTest {
             Cell newState = cell.nextState(surroundingCells);
 
             assertThat(newState.isAlive()).isTrue();
+            assertThat(newState.getFill()).isEqualTo(LIVING_CELL_COLOR);
         }
 
         @ParameterizedTest
@@ -69,6 +74,16 @@ public class CellTest {
             Cell newState = cell.nextState(surroundingCells);
 
             assertThat(newState.isAlive()).isFalse();
+            assertThat(newState.getFill()).isEqualTo(DEAD_CELL_COLOR);
+        }
+
+        @Test
+        void change_state_of_living_cell_become_dead() {
+            Cell cell = new Cell();
+            cell.setAlive(true);
+            cell.changeState();
+            assertThat(cell.isAlive()).isFalse();
+            assertThat(cell.getFill()).isEqualTo(DEAD_CELL_COLOR);
         }
     }
 
@@ -87,6 +102,7 @@ public class CellTest {
             Cell newState = cell.nextState(surroundingCells).nextState(surroundingCells);
 
             assertThat(newState.isAlive()).isTrue();
+            assertThat(newState.getFill()).isEqualTo(LIVING_CELL_COLOR);
         }
 
         @ParameterizedTest
@@ -97,6 +113,16 @@ public class CellTest {
             Cell newState = cell.nextState(surroundingCells);
 
             assertThat(newState.isAlive()).isFalse();
+            assertThat(newState.getFill()).isEqualTo(DEAD_CELL_COLOR);
+        }
+
+        @Test
+        void change_state_of_dead_cell_become_alive() {
+            Cell cell = new Cell();
+            cell.setAlive(false);
+            cell.changeState();
+            assertThat(cell.isAlive()).isTrue();
+            assertThat(cell.getFill()).isEqualTo(LIVING_CELL_COLOR);
         }
     }
 

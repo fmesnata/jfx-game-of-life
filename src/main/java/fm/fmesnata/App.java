@@ -5,12 +5,10 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -88,22 +86,10 @@ public class App extends Application {
             } else {
                 cell.setFill(DEAD_CELL_COLOR);
             }
-            cell.setOnMouseClicked(changeCellState(cell));
+            cell.setOnMouseClicked(event -> cell.changeState());
             col.getChildren().add(cell);
         }
         return col;
-    }
-
-    private EventHandler<MouseEvent> changeCellState(Cell cell) {
-        return event -> {
-            if (cell.isAlive()) {
-                cell.setAlive(false);
-                cell.setFill(DEAD_CELL_COLOR);
-            } else {
-                cell.setAlive(true);
-                cell.setFill(LIVING_CELL_COLOR);
-            }
-        };
     }
 
     private ToolBar createToolBar() {
