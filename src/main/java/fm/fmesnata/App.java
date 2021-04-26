@@ -30,6 +30,7 @@ public class App extends Application {
     private static final int ROW_COUNT = 40;
     private static final int SPACE_BETWEEN_CELLS = 1;
     private static final int DEFAULT_FPS = 10;
+    public static final int ONE_SECOND = 1000;
     private Cell[][] cells;
     private Timeline animation;
     private BorderPane borderPane;
@@ -38,9 +39,9 @@ public class App extends Application {
     public void start(Stage stage) {
         borderPane = new BorderPane();
         cells = initCells();
-        VBox cellsContainer = createCellsContainer(cells);
+        VBox cellsBoard = createCellsBoard(cells);
         borderPane.setTop(createToolBar());
-        borderPane.setCenter(cellsContainer);
+        borderPane.setCenter(cellsBoard);
         Scene scene = new Scene(borderPane, WIDTH, HEIGHT);
         stage.setScene(scene);
         stage.show();
@@ -54,16 +55,14 @@ public class App extends Application {
         Cell[][] cellsArray = new Cell[ROW_COUNT][COLUMN_COUNT];
         for (int row = 0; row < ROW_COUNT; row++) {
             for (int col = 0; col < COLUMN_COUNT; col++) {
-                Cell cell = Cell.createDeadCell();
-                cellsArray[row][col] = cell;
+                cellsArray[row][col] = Cell.createDeadCell();
             }
         }
         return cellsArray;
     }
 
-    private VBox createCellsContainer(Cell[][] cells) {
-        VBox rows = new VBox();
-        rows.setSpacing(1);
+    private VBox createCellsBoard(Cell[][] cells) {
+        VBox rows = new VBox(1);
         for (Cell[] c : cells) {
             HBox cols = createCellsColumns(c);
             rows.getChildren().addAll(cols);
@@ -101,7 +100,7 @@ public class App extends Application {
             } catch (NumberFormatException e) {
                 fps = DEFAULT_FPS;
             }
-            animation = createAnimation(1000 / fps);
+            animation = createAnimation(ONE_SECOND / fps);
             start.setDisable(true);
             reset.setDisable(true);
             animation.play();
@@ -115,9 +114,10 @@ public class App extends Application {
             start.setDisable(false);
             reset.setDisable(false);
         });
+
         reset.setOnMouseClicked(event -> {
-            Cell[][] cleanBoard = initCells();
-            borderPane.setCenter(createCellsContainer(cleanBoard));
+            cells = initCells();
+            borderPane.setCenter(createCellsBoard(cells));
         });
         toolBar.getItems().addAll(label, animationDurationField, start, stop, reset);
         return toolBar;
@@ -130,7 +130,7 @@ public class App extends Application {
     }
 
     private void updateDisplay() {
-        Cell[][] newCellsState = new Cell[ROW_COUNT][COLUMN_COUNT];
+        Cell[][] newCellsArray = new Cell[ROW_COUNT][COLUMN_COUNT];
         for (int row = 0; row < ROW_COUNT; row++) {
             for (int col = 0; col < COLUMN_COUNT; col++) {
                 Cell currentCell = cells[row][col];
@@ -180,11 +180,11 @@ public class App extends Application {
                     }
                 }
                 Cell newCell = currentCell.nextState(surroundingCells);
-                newCellsState[row][col] = newCell;
+                newCellsArray[row][col] = newCell;
             }
         }
-        cells = newCellsState;
-        VBox cellsContainer = createCellsContainer(newCellsState);
+        cells = newCellsArray;
+        VBox cellsContainer = createCellsBoard(newCellsArray);
         borderPane.setCenter(cellsContainer);
     }
 }
