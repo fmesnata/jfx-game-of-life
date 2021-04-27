@@ -1,1 +1,8 @@
 = Game of life
+
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life[Game of life] using JavaFX
+
+image::demo.gif[]
+
+Run the app using Maven : `mvn javafx:run` +
+Or build an image using `mvn javafx:jlink` and execute `target/image/bin/jfx-game-of-life`
